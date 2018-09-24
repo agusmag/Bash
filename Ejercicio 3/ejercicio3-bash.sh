@@ -84,18 +84,49 @@ function help(){
 		return -1;
 	fi
 
-#Se recolecta la informacion del archivo de base de datos de cada cliente.
+#Se valida que la cantidad de etiquetas coincida con las etiqutas del archivo de clientes
 
-i=0;
-cat "$2" | while read line
-do
-cliente[$i]=`echo $line | awk -F ":" '{print $1}'`
-done
+etiquetas=$(grep -o '@.' "$1" | wc -l)
 
-#Se identifican las etiquetas de la carta modelo
+campos=$(awk -F";" '{ nw+=NF } NR==1 {print nw}' "$2")
 
-#Se verifica que los clientes cumplan con todas las etiquetas de la carta modelo
+#Se obtienen la cantidad de registros para generar las cartas correspondientes
+
+registros=$(awk -F";" '{ nr=NR } END{print nr-1}' "$2")
+
+if [ $etiquetas != $campos ]; then
+	echo 'Los datos entre el archivo "$1" y "$2" son inconsistentes, verifique etiquetas'
+	return -1
+fi
+
+#Se crea una variable con la fecha actual con el formato correcto YYYYMMDDHHMM
+
+fecha=$(date +"%Y%m%d%H%M") #"%Y-%m-%d-%H-%M")
+
+#Se crea el directorio para las cartas
+
+nombre_dir="Cartas_$fecha"
+mkdir -p "./$nombre_dir"
 
 #Se generan las cartas personalizadas para cada cliente
 
+clientes=$(( $registros+1 ))
+
+for (( i=2; i <= $clientes ; i++ )) 
+do
+	#Creo el archivo con el nombre y apellido del cliente
+	
+	nomCli=$(awk -F";" -v row=$i 'NR==row { print $1 }' "$2")
+	apeCli=$(awk -F";" -v row=$i 'NR==row { print $2 }' "$2")
+	touch "./$nombre_dir/aviso_$apeCli _ $nomCli _ $fecha"
+	cat "$1" > "./$nombre_dir/aviso_$apeCli _ $nomCli _ $fecha"
+
+	for (( j=1; j <= $etiquetas; j++ ))
+	do
+		etiqueta=$(awk -F";" -v field=$j  'NR==1 { print $field }' "$2")
+		dato_etiqueta=$(awk -F";" -v row=$i -v field=$j 'NR==row { print $field }' "$2")
+		echo "El dato de la etiqueta: $etiqueta es: $dato_etiqueta"
+		sed -i "s|@$etiqueta|$dato_etiqueta|I" "./$nombre_dir/aviso_$apeCli _ $nomCli _ $fecha"	
+	done
+done
 
