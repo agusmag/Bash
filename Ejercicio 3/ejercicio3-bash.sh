@@ -29,11 +29,11 @@ function help(){
 	echo "	source Ejercicio2sh \"[ruta]/[archCartaModelo]\" \"[ruta]/[archBDClientes]\""
 	echo " "
 	echo "Autores:"
-	echo "Arias Pablo Alejandro"
-	echo "Feito Gustavo Sebastian"
+	echo "Arias Pablo Alejandro - DNI 32.340.341"
+	echo "Feito Gustavo Sebastian - DNI 27.027.190"
 	echo "Magliano, Agustin       - DNI 39.744.938"
-	echo "Rosmirez Juan Ignacio"
-	echo "Zambianchi Nicolas Ezequiel"
+	echo "Rosmirez Juan Ignacio - DNI 40.010.264"
+	echo "Zambianchi Nicolas Ezequiel - 39.770.752"
 }
 
 #Si se indican alguno de los parametros de ayuda
@@ -85,10 +85,17 @@ function help(){
 	fi
 
 #Se valida que la cantidad de etiquetas coincida con las etiqutas del archivo de clientes
+#Además se valida que la cantidad minima de etiquetas sea 2 (Nombre y Apellido obligatorios).
 
 etiquetas=$(grep -o '@.' "$1" | wc -l)
 
-campos=$(awk -F";" '{ nw+=NF } NR==1 {print nw}' "$2")
+echo "La cantidad de etiquetas son: $etiquetas"
+if [ $etiquetas -lt 2 ]; then
+	echo 'El Nombre y Apellido del cliente son necesarios para el buen funcionamiento del script.'
+	return -1
+fi
+
+campos=$(awk -F";" '{ nw+=NF } NR==1 {print nw-1}' "$2")
 
 #Se obtienen la cantidad de registros para generar las cartas correspondientes
 
@@ -126,6 +133,7 @@ do
 		etiqueta=$(awk -F";" -v field=$j  'NR==1 { print $field }' "$2")
 		dato_etiqueta=$(awk -F";" -v row=$i -v field=$j 'NR==row { print $field }' "$2")
 		echo "El dato de la etiqueta: $etiqueta es: $dato_etiqueta"
+		echo " "
 		sed -i "s|@$etiqueta|$dato_etiqueta|I" "./$nombre_dir/aviso_$apeCli _ $nomCli _ $fecha"	
 	done
 done
