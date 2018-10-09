@@ -89,7 +89,6 @@ function help(){
 
 etiquetas=$(grep -o '@.' "$1" | wc -l)
 
-echo "La cantidad de etiquetas son: $etiquetas"
 if [ $etiquetas -lt 2 ]; then
 	echo 'El Nombre y Apellido del cliente son necesarios para el buen funcionamiento del script.'
 	return -1
@@ -132,8 +131,6 @@ do
 	do
 		etiqueta=$(awk -F";" -v field=$j  'NR==1 { print $field }' "$2")
 		dato_etiqueta=$(awk -F";" -v row=$i -v field=$j 'NR==row { print $field }' "$2")
-		echo "El dato de la etiqueta: $etiqueta es: $dato_etiqueta"
-		echo " "
 		sed -i "s|@$etiqueta|$dato_etiqueta|I" "./$nombre_dir/aviso_$apeCli _ $nomCli _ $fecha"	
 	done
 done
