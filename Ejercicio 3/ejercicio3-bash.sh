@@ -1,9 +1,9 @@
 #!/bin/bash
 
 function help(){
-	echo "TP N°2 - Bash"
+	echo "TP N°3 - Bash"
 	echo " "
-	echo "Nombre: Ejercicio2.sh"
+	echo "Nombre: Ejercicio3.sh"
 	echo ""
 	echo "Entrega N°1"
 	echo "Fecha de entrega: 11-10-2018"
@@ -26,14 +26,14 @@ function help(){
 	echo "las rutas de ambos archivos (primero de la"
 	echo "carta modelo y segundo la base de datos de"
 	echo "clientes."
-	echo "	source Ejercicio2sh \"[ruta]/[archCartaModelo]\" \"[ruta]/[archBDClientes]\""
+	echo "	source Ejercicio3.sh \"[ruta]/[archCartaModelo]\" \"[ruta]/[archBDClientes]\""
 	echo " "
 	echo "Autores:"
-	echo "Arias Pablo Alejandro - DNI 32.340.341"
-	echo "Feito Gustavo Sebastian - DNI 27.027.190"
-	echo "Magliano, Agustin       - DNI 39.744.938"
-	echo "Rosmirez Juan Ignacio - DNI 40.010.264"
-	echo "Zambianchi Nicolas Ezequiel - 39.770.752"
+	echo "Arias Pablo Alejandro       - DNI 32.340.341"
+	echo "Feito Gustavo Sebastian     - DNI 27.027.190"
+	echo "Magliano, Agustin           - DNI 39.744.938"
+	echo "Rosmirez Juan Ignacio       - DNI 40.010.264"
+	echo "Zambianchi Nicolas Ezequiel - DNI 39.770.752"
 }
 
 #Si se indican alguno de los parametros de ayuda
