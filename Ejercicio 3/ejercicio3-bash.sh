@@ -3,7 +3,7 @@
 function help(){
 	echo "TP N°3 - Bash"
 	echo " "
-	echo "Nombre: Ejercicio3.sh"
+	echo "Nombre: ejercicio3-bash.sh"
 	echo ""
 	echo "Entrega N°1"
 	echo "Fecha de entrega: 11-10-2018"
@@ -19,14 +19,14 @@ function help(){
 	echo "Modos:"
 	echo "Se puede acceder a la ayuda enviando [-h]"
 	echo "como único parámetro."
-	echo "	source Ejercicio2.sh -h"
+	echo "	source ejercicio3-bash.sh -h"
 	echo " "
 	echo "Ejecución:"
 	echo "Para una correcta ejecución se deben enviar"
 	echo "las rutas de ambos archivos (primero de la"
 	echo "carta modelo y segundo la base de datos de"
 	echo "clientes."
-	echo "	source Ejercicio3.sh \"[ruta]/[archCartaModelo]\" \"[ruta]/[archBDClientes]\""
+	echo "	source ejercicio3-bash.sh \"[ruta]/[archCartaModelo]\" \"[ruta]/[archBDClientes]\""
 	echo " "
 	echo "Autores:"
 	echo "Arias Pablo Alejandro       - DNI 32.340.341"
@@ -36,20 +36,20 @@ function help(){
 	echo "Zambianchi Nicolas Ezequiel - DNI 39.770.752"
 }
 
-#Si se indican alguno de los parametros de ayuda
-	if [  "$1" == "-h"  ] || [ "$1" == "-help" ] || [ "$1" == "-?" ]; then
-		echo " "
-		help
-		echo " "
-		return -1;
-	fi
-
 #Si los parametros son incorrectos
 	if [ $# -ne 2 ]; then
 		echo " "
 		echo "La cantidad de parametros ingresados es incorrecta."
 		echo " "
-		return -1;
+		return
+	fi
+
+#Si se indican alguno de los parametros de ayuda
+	if [  "$1" == "-h"  ] || [ "$1" == "-help" ] || [ "$1" == "-?" ]; then
+		echo " "
+		help
+		echo " "
+		return
 	fi
 
 #Si los archivos no existen
@@ -57,14 +57,14 @@ function help(){
 		echo " "
 		echo "El archivo \"$1\" no existe."
 		echo " "
-		return -1;
+		return
 	fi
 
 	if [ ! -f "$2" ]; then
 		echo " "
 		echo "El archivo \"$2\" no existe."
 		echo " "
-		return -1;
+		return
 	fi
 
 #Si los archivos estan vacios o no son del formato correcto
@@ -73,7 +73,7 @@ function help(){
 		echo " "
 		echo "El archivo \"$1\" no es un archivo de texto o esta vacio."
 		echo " "
-		return -1;
+		return
 	fi
 
 	file -i "$2" | grep text/plain >> /dev/null
@@ -81,7 +81,7 @@ function help(){
 		echo " "
 		echo "El archivo \"$2\" no es un archivo de texto o esta vacio."
 		echo " "
-		return -1;
+		return
 	fi
 
 #Se valida que la cantidad de etiquetas coincida con las etiqutas del archivo de clientes
@@ -91,7 +91,7 @@ etiquetas=$(grep -o '@.' "$1" | wc -l)
 
 if [ $etiquetas -lt 2 ]; then
 	echo 'El Nombre y Apellido del cliente son necesarios para el buen funcionamiento del script.'
-	return -1
+	return
 fi
 
 campos=$(awk -F";" '{ nw+=NF } NR==1 {print nw-1}' "$2")
@@ -102,7 +102,7 @@ registros=$(awk -F";" '{ nr=NR } END{print nr-1}' "$2")
 
 if [ $etiquetas != $campos ]; then
 	echo 'Los datos entre el archivo "$1" y "$2" son inconsistentes, verifique etiquetas'
-	return -1
+	return
 fi
 
 #Se crea una variable con la fecha actual con el formato correcto YYYYMMDDHHMM
@@ -135,3 +135,4 @@ do
 	done
 done
 
+return
