@@ -1,0 +1,4 @@
+Estimado Sr/a @NOMBRE @APELLIDO:
+
+El motivo de la presente es informar que el monto de la deuda asciende a $@DEUDA, cuyo vencimiento será @FECHA2. De no abonarlo antes de dicha fecha, deberá pagar un interés de @INTERES %, con fecha tope de 10 días. Cualquier consulta, comuníquese con atención al cliente.
+		Saludos Cordiales,Tarjeta BaratinBaraton

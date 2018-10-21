@@ -1,0 +1,5 @@
+Nombre;Apellido;Deuda;Fecha;Interes;
+Juan Jose;Lopez;2345,23;28/10/2018;4;
+Jorge;Perez Morfi;968,12;23/10/2018;5;
+Marcela;Gomez;2006,20;23/10/2018;4,5;
+Agustin;Magliano;400;6/10/2018;2;

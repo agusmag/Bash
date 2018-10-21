@@ -5,7 +5,7 @@ function help(){
 	echo " "
 	echo "Nombre: ejercicio3-bash.sh"
 	echo ""
-	echo "Entrega N°1"
+	echo "Re entrega N°1"
 	echo "Fecha de entrega: 11-10-2018"
 	echo " "
 	echo "Descripción:"
@@ -36,20 +36,20 @@ function help(){
 	echo "Zambianchi Nicolas Ezequiel - DNI 39.770.752"
 }
 
-#Si los parametros son incorrectos
-	if [ $# -ne 2 ]; then
-		echo " "
-		echo "La cantidad de parametros ingresados es incorrecta."
-		echo " "
-		return
-	fi
-
 #Si se indican alguno de los parametros de ayuda
 	if [  "$1" == "-h"  ] || [ "$1" == "-help" ] || [ "$1" == "-?" ]; then
 		echo " "
 		help
 		echo " "
-		return
+		exit 1
+	fi
+
+#Si los parametros son incorrectos
+	if [ $# -ne 2 ]; then
+		echo " "
+		echo "La cantidad de parametros ingresados es incorrecta."
+		echo " "
+		exit 1
 	fi
 
 #Si los archivos no existen
@@ -57,14 +57,14 @@ function help(){
 		echo " "
 		echo "El archivo \"$1\" no existe."
 		echo " "
-		return
+		exit 1
 	fi
 
 	if [ ! -f "$2" ]; then
 		echo " "
 		echo "El archivo \"$2\" no existe."
 		echo " "
-		return
+		exit 1
 	fi
 
 #Si los archivos estan vacios o no son del formato correcto
@@ -73,7 +73,7 @@ function help(){
 		echo " "
 		echo "El archivo \"$1\" no es un archivo de texto o esta vacio."
 		echo " "
-		return
+		exit 1
 	fi
 
 	file -i "$2" | grep text/plain >> /dev/null
@@ -81,7 +81,8 @@ function help(){
 		echo " "
 		echo "El archivo \"$2\" no es un archivo de texto o esta vacio."
 		echo " "
-		return
+		read -p "Ingrese cualquier tecla para continuar..."
+		exit 1
 	fi
 
 #Se valida que la cantidad de etiquetas coincida con las etiqutas del archivo de clientes
@@ -91,7 +92,7 @@ etiquetas=$(grep -o '@.' "$1" | wc -l)
 
 if [ $etiquetas -lt 2 ]; then
 	echo 'El Nombre y Apellido del cliente son necesarios para el buen funcionamiento del script.'
-	return
+	exit 1
 fi
 
 campos=$(awk -F";" '{ nw+=NF } NR==1 {print nw-1}' "$2")
@@ -102,7 +103,7 @@ registros=$(awk -F";" '{ nr=NR } END{print nr-1}' "$2")
 
 if [ $etiquetas != $campos ]; then
 	echo 'Los datos entre el archivo "$1" y "$2" son inconsistentes, verifique etiquetas'
-	return
+	exit 1
 fi
 
 #Se crea una variable con la fecha actual con el formato correcto YYYYMMDDHHMM
@@ -114,9 +115,13 @@ fecha=$(date +"%Y%m%d%H%M") #"%Y-%m-%d-%H-%M")
 nombre_dir="Cartas_$fecha"
 mkdir -p "./$nombre_dir"
 
+clientes=$(( $registros+1 ))
+
 #Se generan las cartas personalizadas para cada cliente
 
-clientes=$(( $registros+1 ))
+#Se almacenan las etiquetas de la carta modelo para poder compararse luego.
+etiquetas_objetivo=( $(grep -E -o -w -i "@[a-z0-9]*" "$1") )
+
 
 for (( i=2; i <= $clientes ; i++ )) 
 do
@@ -131,8 +136,16 @@ do
 	do
 		etiqueta=$(awk -F";" -v field=$j  'NR==1 { print $field }' "$2")
 		dato_etiqueta=$(awk -F";" -v row=$i -v field=$j 'NR==row { print $field }' "$2")
+
+		etiquetaLocal=$(echo $etiqueta | tr [a-z] [A-Z] )
+		if [[ ${etiquetas_objetivo[$j-1]} != "@$etiquetaLocal" ]]; then
+			echo " La etiqueta ${etiquetas_objetivo[$j-1]} no concuerda con la etiqueta @$etiquetaLocal. Corrija los modelos."
+			rm -r "./$nombre_dir"
+			exit 1
+		fi
+
 		sed -i "s|@$etiqueta|$dato_etiqueta|I" "./$nombre_dir/aviso_$apeCli _ $nomCli _ $fecha"	
 	done
 done
 
-return
+exit 0
