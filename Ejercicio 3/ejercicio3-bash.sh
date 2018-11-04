@@ -36,7 +36,7 @@ function help(){
 	echo "Zambianchi Nicolas Ezequiel - DNI 39.770.752"
 }
 
-#Si se indican alguno de los parametros de ayuda
+#Si se indican alguno de los parametros de ayuda.
 	if [  "$1" == "-h"  ] || [ "$1" == "-help" ] || [ "$1" == "-?" ]; then
 		echo " "
 		help
@@ -44,7 +44,7 @@ function help(){
 		exit 1
 	fi
 
-#Si los parametros son incorrectos
+#Si los parametros son incorrectos.
 	if [ $# -ne 2 ]; then
 		echo " "
 		echo "La cantidad de parametros ingresados es incorrecta."
@@ -52,7 +52,7 @@ function help(){
 		exit 1
 	fi
 
-#Si los archivos no existen
+#Si los archivos no existen.
 	if [ ! -f "$1" ]; then
 		echo " "
 		echo "El archivo \"$1\" no existe."
@@ -67,7 +67,7 @@ function help(){
 		exit 1
 	fi
 
-#Si los archivos estan vacios o no son del formato correcto
+#Si los archivos estan vacios o no son del formato correcto.
 	file -i "$1" | grep text/plain >> /dev/null
 	if [ $? != 0 ]; then
 		echo " "
@@ -85,7 +85,7 @@ function help(){
 		exit 1
 	fi
 
-#Se valida que la cantidad de etiquetas coincida con las etiqutas del archivo de clientes
+#Se valida que la cantidad de etiquetas coincida con las etiqutas del archivo de clientes.
 #Además se valida que la cantidad minima de etiquetas sea 2 (Nombre y Apellido obligatorios).
 
 etiquetas=$(grep -o '@.' "$1" | wc -l)
@@ -97,7 +97,7 @@ fi
 
 campos=$(awk -F";" '{ nw+=NF } NR==1 {print nw-1}' "$2")
 
-#Se obtienen la cantidad de registros para generar las cartas correspondientes
+#Se obtienen la cantidad de registros para generar las cartas correspondientes.
 
 registros=$(awk -F";" '{ nr=NR } END{print nr-1}' "$2")
 
@@ -106,18 +106,18 @@ if [ $etiquetas != $campos ]; then
 	exit 1
 fi
 
-#Se crea una variable con la fecha actual con el formato correcto YYYYMMDDHHMM
+#Se crea una variable con la fecha actual con el formato correcto YYYYMMDDHHMM.
 
 fecha=$(date +"%Y%m%d%H%M") #"%Y-%m-%d-%H-%M")
 
-#Se crea el directorio para las cartas
+#Se crea el directorio para las cartas.
 
 nombre_dir="Cartas_$fecha"
 mkdir -p "./$nombre_dir"
 
 clientes=$(( $registros+1 ))
 
-#Se generan las cartas personalizadas para cada cliente
+#Se generan las cartas personalizadas para cada cliente.
 
 #Se almacenan las etiquetas de la carta modelo para poder compararse luego.
 etiquetas_objetivo=( $(grep -E -o -w -i "@[a-z0-9]*" "$1") )
@@ -125,7 +125,7 @@ etiquetas_objetivo=( $(grep -E -o -w -i "@[a-z0-9]*" "$1") )
 
 for (( i=2; i <= $clientes ; i++ )) 
 do
-	#Creo el archivo con el nombre y apellido del cliente
+	#Creo el archivo con el nombre y apellido del cliente.	
 	
 	nomCli=$(awk -F";" -v row=$i 'NR==row { print $1 }' "$2")
 	apeCli=$(awk -F";" -v row=$i 'NR==row { print $2 }' "$2")
@@ -144,7 +144,7 @@ do
 			exit 1
 		fi
 
-		sed -i "s|@$etiqueta|$dato_etiqueta|I" "./$nombre_dir/aviso_$apeCli _ $nomCli _ $fecha"	
+		sed -i -e "s|@$etiquetaLocal\b|$dato_etiqueta|g" "./$nombre_dir/aviso_$apeCli _ $nomCli _ $fecha"
 	done
 done
 

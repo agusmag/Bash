@@ -1,4 +1,6 @@
 Estimado Sr/a @NOMBRE @APELLIDO:
 
-El motivo de la presente es informar que el monto de la deuda asciende a $@DEUDA, cuyo vencimiento será @FECHA. De no abonarlo antes de dicha fecha, deberá pagar un interés de @INTERES %, con fecha tope de @FECHA2. Cualquier consulta, comuníquese con atención al cliente.
-		Saludos Cordiales,Tarjeta BaratinBaraton
+El motivo de la presente es informar que el monto de la deuda asciende a $@DEUDA, cuyo vencimiento será @FECHA.
+De no abonarlo antes de dicha fecha,deberá pagar un interés de @INTERES %, con fecha tope de @FECHA2.
+Cualquier consulta, comuníquese con atención al cliente.
+	Saludos Cordiales,Tarjeta BaratinBaraton
